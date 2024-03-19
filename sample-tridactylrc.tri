@@ -1,0 +1,258 @@
+"" vim: set filetype=tridactyl
+
+"""" Tridactyl config - yasha.solutions
+"""" This is mostly a mod based on a mix of Doom Emacs and vim old habits
+"""" The general idea of this config is to create a unified experience between
+"""" Emacs and Firefox which are my main daily driver
+"""" This is supported by a good i3wm config which help glue the missing parts
+"""" This is obviously a work in progress but I thought i'd made a snapshot
+
+"" Uncomment the lines you want to keep then move this file to
+"" $XDG_CONFIG_HOME/tridactyl/tridactylrc (that's
+"" ~/.config/tridactyl/tridactylrc to mere mortals) or ~/.tridactylrc and
+"" install the native messenger (:installnative in Tridactyl). Run :source to
+"" get it in the browser, or just restart.
+
+"" Side note:
+"" I keep all my configs into a dedicated repo and use ~/.tridactylrc as
+"" a link to actual location.
+
+
+"" Sanitize will wipes all existing settings. This means that if a setting in this file
+"" is removed, then it will return to default. In other words, this file serves
+"" as an enforced single point of truth for Tridactyl's configuration.
+
+sanitize tridactyllocal tridactylsync
+
+set newtab about:blank
+set allowautofocus false
+set leavegithubalone false 
+set followpagepatterns.next ^(next|newer)\b|»|>>|^(more|更多結果|下一頁|older)$
+set followpagepatterns.prev ^(prev(ious)?|older)\b|«|<<|^上一頁$
+
+"" This will remove a lot of the FF regular UI
+"" It can be surprising at first
+guiset_quiet gui none
+guiset_quiet statuspanel right
+
+set theme dark
+
+
+"" alias
+alias describe help
+alias selection_get_input js let selection; wrap_input((t, sb, se) => {selection = t.slice(sb, se); return [t, sb, se]})(document.activeElement); selection;
+alias focusinput_after_ex ex_exit_hook void promise.then(x => focusinput('-l'))
+alias kill-others-buffers tabonly
+alias oo open_quiet
+
+
+"" allow to open without showing the whole history
+unbind o 
+bind --mode=normal o fillcmdline oo
+
+
+
+"" Disable <C-q>
+bind --mode=insert <C-q> js alert("<C-q> is for quitters.")
+bind --mode=input  <C-q> js alert("<C-q> is for quitters.")
+bind --mode=normal <C-q> js alert("<C-q> is for quitters.")
+bind --mode=ex     <C-q> js alert("<C-q> is for quitters.")
+bind --mode=hint   <C-q> js alert("<C-q> is for quitters.")
+
+"" Fighting against old habit
+bind --mode=normal <C-w> js alert("<C-w> remapped to C-x 0")
+bind --mode=normal <C-l> js alert("Use the minibuffer instead")
+bind --mode=normal <C-t> js alert("Use the minibuffer instead")
+
+"" Emacs style command minibuffer
+bind <A-x> fillcmdline_notrail
+
+"" Git{Hub,Lab} git clone via SSH yank
+bind yg composite js "git clone " + document.location.href.replace(/https?:\/\//,"git@").replace("/",":").replace(/$/,".git") | clipboard yank
+
+"" disable default behaviour, too dangerous
+unbind d 
+unbind D
+unbind b
+unbind <C-k>
+unbind <Escape>
+
+"" Close current tab ala emacs
+unbind --mode=normal <C-x>
+bind <C-x>0 winclose 
+bind <C-x>k tabclose
+bind <C-x>o fillcmdline t
+bind <Space>bk tabclose
+bind <Space>. fillcmdline tabopen
+
+bind <Escape><C-s> fillcmdline find
+bind <C-s><C-s> findnext
+bind <C-g> clearsearchhighlight
+bind <Escape><Escape> composite mode normal ; hidecmdline
+
+
+bind H tabprev
+bind L tabnext
+bind K forward
+bind J back
+bind <C-x>l tabnext
+bind <C-x>h tabprev
+bind <C-x>b fillcmdline bufferall
+bind <Space><Space> fillcmdline buffer
+bind <C-x>1 tabdetach 
+bind <C-x>tm mute toggle
+bind <C-x>u undo
+bind <C-/> undo
+
+"" When writing, get back the cut function
+unbind --mode=input  <C-x>
+unbind --mode=insert <C-x>
+
+bind --mode=ex          <A-Backspace>   text.backward_kill_word
+bind --mode=insert      <A-Backspace>   text.backward_kill_word
+bind --mode=input       <A-Backspace>   text.backward_kill_word
+
+"" C-n and C-p require patching FF
+"" C-k cannot be used even after a patch... go figure
+bind --mode=ex     <C-n> ex.next_completion
+bind --mode=ex     <C-p> ex.prev_completion
+bind --mode=ex     <C-y> ex.insert_completion
+bind --mode=ex     <C-e> ex.deselect_completion
+bind --mode=ex     <Tab> ex.complete
+bind --mode=ex     <C-g> composite text.beginning_of_line ; text.forward_word ; text.kill_word
+
+"" Remapping editorial zones to Emacs 
+bind --mode=ex          <A-l>   text.downcase_word
+bind --mode=insert      <A-l>   text.downcase_word
+bind --mode=input       <A-l>   text.downcase_word
+bind --mode=ex          <A-u>   text.upcase_word
+bind --mode=insert      <A-u>   text.upcase_word
+bind --mode=input       <A-u>   text.upcase_word
+bind --mode=ex          <C-a>   text.beginning_of_line
+bind --mode=insert      <C-a>   text.beginning_of_line
+bind --mode=input       <C-a>   text.beginning_of_line
+bind --mode=ex          <C-e>   text.end_of_line
+bind --mode=insert      <C-e>   text.end_of_line
+bind --mode=input       <C-e>   text.end_of_line
+bind --mode=ex          <C-f>   text.forward_word
+bind --mode=insert      <C-f>   text.forward_word
+bind --mode=input       <C-f>   text.forward_word
+bind --mode=ex          <C-k>   text.kill_line
+bind --mode=insert      <C-k>   text.kill_line
+bind --mode=input       <C-k>   text.kill_line
+bind --mode=ex          <C-u>   text.backward_kill_line
+bind --mode=insert      <C-u>   text.backward_kill_line
+bind --mode=input       <C-u>   text.backward_kill_line
+
+
+
+
+"" Smooth scrolling, yes please. This is still a bit janky in Tridactyl.
+set smoothscroll true
+
+"" The default jump of 10 is a bit much.
+bind j scrollline 5
+bind k scrollline -5
+
+
+"" The default jump of 10 is a bit much.
+bind j scrollline 5
+bind k scrollline -5
+
+
+"" Blacklisting figma and others
+"" side note: Shift+Esc will toogle ignore mode
+blacklistadd figma.com
+blacklistadd gmail.com
+blacklistadd docs.google.com
+blacklistadd sheets.google.com
+
+
+
+"" Binds for navigations and web browsing
+
+"" Make hackernews less noisy
+alias ff_hn_bg hint -Jbc .titleline > a , .subline > a:nth-of-type(4), .morelink, .pagetop a, .titleline a
+alias ff_hn hint -Jc .titleline > a , .subline > a:nth-of-type(4), .morelink, .pagetop a, .titleline a
+alias ff_hn_to hint -Jc .titleline > a , .morelink
+bindurl news.ycombinator.com f ff_hn_to
+bindurl news.ycombinator.com F hint
+
+
+" " Only hint search results on Google and DDG and StartPage
+bindurl www.google.com f hint -Jc #search div:not(.action-menu) > a
+bindurl www.google.com F hint -Jbc #search div:not(.action-menu) > a
+bindurl ^https://duckduckgo.com f hint -Jc [data-testid="result-title-a"]
+bindurl ^https://duckduckgo.com F hint -Jbc [data-testid="result-title-a"]
+bindurl www.startpage.com f hint -Jc .w-gl__result-second-line-container > a , .pagination__num , .next, .prev
+bindurl www.startpage.com F hint -Jbc .w-gl__result-second-line-container > a , .pagination__num , .next, .prev
+
+
+
+
+"" quick marks
+quickmark h https://news.ycombinator.com/
+quickmark t https://translate.google.com
+
+
+"" Stupid workaround to let hint -; be used with composite which steals semi-colons
+alias hint_focus hint -;
+
+"" Open right click menu on links
+bind ;C composite hint_focus; !s xdotool key Menu
+
+"" Suspend / "discard" all tabs - handy for stretching out battery life
+alias discardall jsb browser.tabs.query({}).then(ts => browser.tabs.discard(ts.map(t=>t.id)))
+
+
+"" Misc settings
+
+
+"" set editorcmd to suckless terminal, or use the defaults on other platforms
+js tri.browserBg.runtime.getPlatformInfo().then(os=>{const editorcmd = os.os=="linux" ? "st vim" : "auto"; tri.config.set("editorcmd", editorcmd)})
+
+"" Testing this one for now...
+set hintfiltermode vimperator-reflow
+set hintnames numeric
+
+
+"" Add helper commands that Mozillians think make Firefox irredeemably
+"" insecure. For details, read the comment at the top of this file.
+command fixamo_quiet jsb tri.excmds.setpref("privacy.resistFingerprinting.block_mozAddonManager", "true").then(tri.excmds.setpref("extensions.webextensions.restrictedDomains", '""'))
+command fixamo js tri.excmds.setpref("privacy.resistFingerprinting.block_mozAddonManager", "true").then(tri.excmds.setpref("extensions.webextensions.restrictedDomains", '""').then(tri.excmds.fillcmdline_tmp(3000, "Permissions added to user.js. Please restart Firefox to make them take affect.")))
+
+
+
+"" Make Tridactyl work on more sites at the expense of some security.
+"" For details, read the comment at the top of this file.
+fixamo_quiet
+
+
+"" The following modification allows Tridactyl to function on more pages, e.g. raw GitHub pages.
+"" You may not wish to run this. Mozilla strongly feels that you shouldn't.
+"" Read https://wiki.mozilla.org/Security/CSP#Goals for more information.
+
+"" Equivalent to `set csp clobber` before it was removed.
+"" This weakens your defences against cross-site-scripting attacks
+"" and other types of code-injection by reducing the strictness
+"" of Content Security Policy on all sites in a couple of ways.
+
+"" We remove the sandbox directive
+"" https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/sandbox
+"" which allows our iframe (and anyone else's) to run on any website.
+""
+"" We weaken the style-src directive
+"" https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src
+"" to allow us to theme our elements.
+"" This exposes you to 'cross site styling' attacks
+
+jsb browser.webRequest.onHeadersReceived.addListener(tri.request.clobberCSP,{urls:["<all_urls>"],types:["main_frame"]},["blocking","responseHeaders"])
+
+
+
+
+""
+"" URL redirects
+""
+autocmd DocStart ^http(s?)://www.reddit.com js tri.excmds.urlmodify("-t", "www", "old")
+"" autocmd DocLoad twitter.com urlmodify -t twitter.com nitter.net
