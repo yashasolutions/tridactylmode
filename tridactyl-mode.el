@@ -2,8 +2,8 @@
 ;;
 ;; Copyright (C) 2024 Yasha
 ;;
-;; Author: Yasha <contact@yasha.solutions>
-;; Maintainer: Yasha <contact@yasha.solutions>
+;; Author: Yasha @yashasolutions
+;; Maintainer: Yasha @yashasolutions
 ;; Created: March 19, 2024
 ;; Modified: March 19, 2024
 ;; Version: 0.0.1
