@@ -1,6 +1,6 @@
 # Tridactyl Major Mode for Emacs
 
-A basic emacs major mode for [Tridactyl](https//github.com/tridactyl/trydactyl) 
+A basic emacs major mode for [Tridactyl](https://github.com/tridactyl/tridactyl) 
 
 ## Installation 
 
