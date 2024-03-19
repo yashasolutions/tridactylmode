@@ -10,7 +10,7 @@ A more structured approach can be, for doom emacs users:
 
 ``` emacs-lisp
 (package! tridactyl-mode
-  :recipe (:fetcher github :repo "yashasolutions/tridactyl"))
+  :recipe (:fetcher github :repo "yashasolutions/tridactylmode"))
 ```
 
 TODO: Improve Readme installation 
